@@ -134,6 +134,19 @@ namespace fmy
 			_head->_next = _head;
 			_head->_prev = _head;
 		}
+		
+		//initializer_list进行构造
+		list(std::initializer_list<T> ilt)
+		{
+			_head = new Node();
+			_head->_next = _head;
+			_head->_prev = _head;
+
+			for (auto e : ilt)
+			{
+				push_back(e);
+			}
+		}
 
 		////传统写法 lt2(lt1)
 		//list(const list<T>& lt)
