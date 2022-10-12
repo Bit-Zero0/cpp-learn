@@ -17,6 +17,20 @@ namespace fmy
 		{
 
 		}
+		//使用initializer_list进行构造
+		vector(initializer_list<T> itl)
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _end_of_storage(nullptr)
+		{
+			vector<T> tmp;
+			for (auto e : itl)
+			{
+				tmp.push_back(e);
+			}
+
+			swap(tmp);
+		}
 
 		////v2(v1) 传统写法
 		//vector(const vector<T>& v)
