@@ -7,10 +7,10 @@ struct AVLTreeNode {
 	AVLTreeNode<K, V>* _parent;
 
 	pair<K, V> _kv;
-	int _bf;
+	int _bf; // 平衡因子
 
 	AVLTreeNode(const pair<K, V>& kv)
-		:_left(nullptr)
+		: _left(nullptr)
 		, _right(nullptr)
 		, _parent(nullptr)
 		, _bf(0)
@@ -40,6 +40,7 @@ public:
 		Node* parent = nullptr;
 		Node* cur = _root;
 
+		//寻找相同的值
 		while (cur)
 		{
 			if (cur->_kv.first > kv.first)
@@ -57,6 +58,8 @@ public:
 			}
 		}
 
+		//没有找到相同的值
+		//插入到parent,成为parent的孩子
 		cur = new Node(kv);
 		if (parent->_kv.first > kv.first)
 		{
@@ -70,7 +73,7 @@ public:
 		}
 
 
-
+		//调整avl树高度
 		while (parent)
 		{
 			if (cur == parent->_left)
@@ -111,7 +114,6 @@ public:
 
 				break;
 			}
-
 			else
 			{
 				assert(false);// 说明插入更新平衡因子之前，树中平衡因子就有问题了
@@ -140,9 +142,8 @@ public:
 		if (parent == _root)
 		{
 			_root = subL;
-			_root->_parent = parentParent;
+			_root->_parent = nullptr;
 		}
-
 		else {
 			if (parentParent->_left == parent)
 				parentParent->_left = subL;
@@ -187,15 +188,19 @@ public:
 		subR->_bf = parent->_bf = 0;
 	}
 
+	//右左双旋
+	//旋转后 , parent节点为subRL
 	void RotateRL(Node* parent)
 	{
 		Node* subR = parent->_right;
 		Node* subRL = subR->_left;
-		int bf = subRL->_bf;
+
+		int bf = subRL->_bf; // 用于最后调整平衡因子的关键
 
 		RotateR(parent->_right);
 		RotateL(parent);
 		
+		// 调整旋转后的平衡因子
 		if (bf == 1)
 		{
 			parent->_bf = -1;
@@ -220,17 +225,22 @@ public:
 		}
 	}
 
+
+	
+	//左右双旋
+	//旋转后 , parent节点为subLR
 	void RotateLR(Node* parent)
 	{
 		Node* subL = parent->_left;
 		Node* subLR = subL->_right;
 
-		int bf = subLR->_bf;
+		int bf = subLR->_bf;// 用于最后调整平衡因子的关键
 
 		RotateL(parent->_left);
 		RotateR(parent);
 
 
+		// 调整旋转后的平衡因子
 		if (bf == 1)
 		{
 			parent->_bf = 0;
@@ -254,6 +264,8 @@ public:
 			assert(false);
 		}
 	}
+
+
 
 	int Height(Node* root)
 	{
@@ -287,6 +299,8 @@ public:
 			&& _IsBalance(root->_left)
 			&& _IsBalance(root->_right);
 	}
+
+	
 	bool IsBalance()
 	{
 		return _IsBalance(_root);
